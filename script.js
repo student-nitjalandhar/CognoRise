@@ -1,73 +1,70 @@
-// script.js
+// Select DOM elements
+const displayDays = document.getElementById('days');
+const displayHours = document.getElementById('hours');
+const displayMinutes = document.getElementById('minutes');
+const displaySeconds = document.getElementById('seconds');
+const startButton = document.getElementById('start-button');
+const dateInput = document.getElementById('date-input');
 
-// Function to handle form submission
-function handleSubmit(event) {
-    event.preventDefault(); // Prevent the form from submitting via HTTP
+// Initialize countdown interval
+let countdownInterval;
 
-    // Get form inputs
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
+// Function to calculate and update the countdown
+function updateCountdown(targetDate) {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
 
-    // Validate form inputs
-    if (name.trim() === '' || email.trim() === '' || message.trim() === '') {
-        alert('Please fill in all fields.'); // Show alert if any field is empty
+    if (distance < 0) {
+        clearInterval(countdownInterval);
+        alert("Countdown finished!");
+        resetDisplay();
         return;
     }
 
-    // Prepare data to be sent (in this example, just log the data)
-    const formData = {
-        name: name,
-        email: email,
-        message: message
-    };
+    // Time calculations
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    console.log('Form data:', formData);
-
-    // Show confirmation message to the user
-    alert('Your message has been submitted!');
-
-    // Clear form inputs
-    document.getElementById('name').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('message').value = '';
+    // Update display
+    displayDays.textContent = formatTime(days);
+    displayHours.textContent = formatTime(hours);
+    displayMinutes.textContent = formatTime(minutes);
+    displaySeconds.textContent = formatTime(seconds);
 }
 
-// Add event listener to the form for submission
-document.querySelector('form').addEventListener('submit', handleSubmit);
+// Function to format time values with leading zeros
+function formatTime(time) {
+    return time < 10 ? `0${time}` : time;
+}
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('nav ul li a').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
+// Function to reset the countdown display
+function resetDisplay() {
+    displayDays.textContent = '00';
+    displayHours.textContent = '00';
+    displayMinutes.textContent = '00';
+    displaySeconds.textContent = '00';
+}
 
-        const targetId = this.getAttribute('href').substring(1);
-        const target = document.getElementById(targetId);
+// Event listener for the start button
+startButton.addEventListener('click', () => {
+    const targetDateValue = dateInput.value;
+    if (!targetDateValue) {
+        alert("Please select a valid date and time.");
+        return;
+    }
 
-        window.scrollTo({
-            top: target.offsetTop - 50, // Adjusted for header height
-            behavior: 'smooth'
-        });
-    });
+    const targetDate = new Date(targetDateValue).getTime();
+    if (isNaN(targetDate)) {
+        alert("Invalid date format.");
+        return;
+    }
+
+    // Clear any existing countdown
+    clearInterval(countdownInterval);
+
+    // Start the countdown
+    updateCountdown(targetDate);
+    countdownInterval = setInterval(() => updateCountdown(targetDate), 1000);
 });
-
-// Image Slider for Projects Section
-let slideIndex = 0;
-
-function showSlides() {
-    const slides = document.querySelectorAll('.project-slide');
-    
-    for (let i = 0; i < slides.length; i++) {
-        slides[i].style.display = 'none';
-    }
-
-    slideIndex++;
-    if (slideIndex > slides.length) {
-        slideIndex = 1;
-    }
-
-    slides[slideIndex - 1].style.display = 'block';
-    setTimeout(showSlides, 3000); // Change image every 3 seconds
-}
-
-showSlides(); // Start the slideshow
