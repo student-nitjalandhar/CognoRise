@@ -18,113 +18,145 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #282c34;
-    font-family: Arial, Helvetica, sans-serif;
+    background-color:lightcyan;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ============================= */
+/*       Calculator Styles       */
+/* ============================= */
+
+.calculator {
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 320px;
+}
+
+/* ============================= */
+/*        Display Screen         */
+/* ============================= */
+
+.display {
+    background-color: #222;
+    color: #0f0;
+    font-size: 2em;
+    text-align: right;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    min-height: 50px;
+    word-wrap: break-word;
+}
+
+/* ============================= */
+/*          Buttons Grid          */
+/* ============================= */
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+}
+
+/* ============================= */
+/*           Buttons              */
+/* ============================= */
+
+.button {
+    padding: 20px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Number Buttons */
+.button.number {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.button.number:hover {
+    background-color: #d5d5d5;
+    transform: scale(1.05);
+}
+
+/* Operator Buttons */
+.button.operator {
+    background-color: #ff9500;
     color: #ffffff;
 }
 
-/* ============================= */
-/*         Container Styles      */
-/* ============================= */
-
-.container {
-    background-color: #3c4048;
-    padding: 30px 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
+.button.operator:hover {
+    background-color: #e08900;
+    transform: scale(1.05);
 }
 
-/* ============================= */
-/*        Heading Styles         */
-/* ============================= */
-
-.container h1 {
-    margin-bottom: 20px;
-    font-size: 2em;
+/* Equals Button */
+.button.equals {
+    background-color: #34c759;
+    color: #ffffff;
+    grid-column: span 1;
 }
 
-/* ============================= */
-/*        Input Section Styles   */
-/* ============================= */
-
-.input-section {
-    margin-bottom: 30px;
+.button.equals:hover {
+    background-color: #28a745;
+    transform: scale(1.05);
 }
 
-.input-section label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 1.1em;
+/* Clear Button */
+.button.clear {
+    background-color: #ff3b30;
+    color: #ffffff;
 }
 
-.input-section input {
-    padding: 10px;
-    width: 80%;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    margin-bottom: 10px;
+.button.clear:hover {
+    background-color: #e02b20;
+    transform: scale(1.05);
 }
 
-.input-section button {
-    padding: 10px 20px;
-    background-color: #61dafb;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* Decimal Button */
+.button.decimal {
+    background-color: #e0e0e0;
+    color: #333;
 }
 
-.input-section button:hover {
-    background-color: #21a1f1;
+.button.decimal:hover {
+    background-color: #d5d5d5;
+    transform: scale(1.05);
 }
 
-/* ============================= */
-/*       Countdown Display Styles */
-/* ============================= */
-
-.countdown {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+/* Zero Button spans two columns */
+.button.zero {
+    grid-column: span 2;
+    background-color: #e0e0e0;
+    color: #333;
 }
 
-.time-segment {
-    background-color: #505763;
-    padding: 20px;
-    border-radius: 5px;
-    width: 80px;
-}
-
-.time-segment span:first-child {
-    display: block;
-    font-size: 1.5em;
-    margin-bottom: 5px;
-}
-
-.time-segment span:last-child {
-    font-size: 0.9em;
-    color: #b0b3b8;
+.button.zero:hover {
+    background-color: #d5d5d5;
+    transform: scale(1.05);
 }
 
 /* ============================= */
 /*        Responsive Design       */
 /* ============================= */
 
-@media (max-width: 500px) {
-    .container {
-        padding: 20px 30px;
+@media (max-width: 400px) {
+    .calculator {
+        width: 90%;
     }
 
-    .time-segment {
+    .display {
+        font-size: 1.5em;
+        padding: 10px;
+    }
+
+    .button {
         padding: 15px;
-        width: 60px;
-    }
-
-    .countdown {
-        gap: 10px;
+        font-size: 1em;
     }
 }

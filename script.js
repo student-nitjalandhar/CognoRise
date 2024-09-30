@@ -1,70 +1,123 @@
+
+
 // Select DOM elements
-const displayDays = document.getElementById('days');
-const displayHours = document.getElementById('hours');
-const displayMinutes = document.getElementById('minutes');
-const displaySeconds = document.getElementById('seconds');
-const startButton = document.getElementById('start-button');
-const dateInput = document.getElementById('date-input');
+const display = document.getElementById('display');
+const buttons = document.querySelectorAll('.button');
 
-// Initialize countdown interval
-let countdownInterval;
+// Initialize variables
+let currentInput = '';
+let operator = null;
+let previousInput = '';
 
-// Function to calculate and update the countdown
-function updateCountdown(targetDate) {
-    const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    if (distance < 0) {
-        clearInterval(countdownInterval);
-        alert("Countdown finished!");
-        resetDisplay();
-        return;
+// Function to update the display
+function updateDisplay() {
+    if (currentInput === '' && previousInput === '') {
+        display.textContent = '0';
+    } else if (operator && currentInput === '') {
+        display.textContent = `${previousInput} ${operator}`;
+    } else if (operator) {
+        display.textContent = `${previousInput} ${operator} ${currentInput}`;
+    } else {
+        display.textContent = currentInput;
     }
-
-    // Time calculations
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Update display
-    displayDays.textContent = formatTime(days);
-    displayHours.textContent = formatTime(hours);
-    displayMinutes.textContent = formatTime(minutes);
-    displaySeconds.textContent = formatTime(seconds);
 }
 
-// Function to format time values with leading zeros
-function formatTime(time) {
-    return time < 10 ? `0${time}` : time;
+// Function to handle number and decimal input
+function handleNumber(number) {
+    if (number === '.' && currentInput.includes('.')) return; // Prevent multiple decimals
+    if (currentInput.length >= 12) return; // Limit input length
+    currentInput += number;
+    updateDisplay();
 }
 
-// Function to reset the countdown display
-function resetDisplay() {
-    displayDays.textContent = '00';
-    displayHours.textContent = '00';
-    displayMinutes.textContent = '00';
-    displaySeconds.textContent = '00';
+// Function to handle operator input
+function handleOperator(op) {
+    if (currentInput === '' && previousInput === '') return; // Do nothing if no input
+    if (operator !== null && currentInput === '') {
+        // Change operator if no new number is entered
+        operator = op;
+        updateDisplay();
+        return;
+    }
+    if (operator !== null) {
+        calculate();
+    }
+    operator = op;
+    previousInput = currentInput || previousInput;
+    currentInput = '';
+    updateDisplay();
 }
 
-// Event listener for the start button
-startButton.addEventListener('click', () => {
-    const targetDateValue = dateInput.value;
-    if (!targetDateValue) {
-        alert("Please select a valid date and time.");
-        return;
+// Function to calculate the result
+function calculate() {
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+
+    if (isNaN(prev) || isNaN(current)) return;
+
+    switch (operator) {
+        case '+':
+            result = prev + current;
+            break;
+        case '-':
+            result = prev - current;
+            break;
+        case '*':
+            result = prev * current;
+            break;
+        case '/':
+            if (current === 0) {
+                alert("Cannot divide by zero");
+                resetCalculator();
+                return;
+            }
+            result = prev / current;
+            break;
+        default:
+            return;
     }
 
-    const targetDate = new Date(targetDateValue).getTime();
-    if (isNaN(targetDate)) {
-        alert("Invalid date format.");
-        return;
-    }
+    currentInput = result.toString();
+    operator = null;
+    previousInput = '';
+    updateDisplay();
+}
 
-    // Clear any existing countdown
-    clearInterval(countdownInterval);
+// Function to reset the calculator
+function resetCalculator() {
+    currentInput = '';
+    operator = null;
+    previousInput = '';
+    updateDisplay();
+}
 
-    // Start the countdown
-    updateCountdown(targetDate);
-    countdownInterval = setInterval(() => updateCountdown(targetDate), 1000);
+// Add event listeners to all buttons
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const number = button.dataset.number;
+        const op = button.dataset.operator;
+        const isClear = button.classList.contains('clear');
+        const isEquals = button.classList.contains('equals');
+
+        if (number !== undefined) {
+            handleNumber(number);
+        }
+
+        if (op !== undefined) {
+            handleOperator(op);
+        }
+
+        if (isClear) {
+            resetCalculator();
+        }
+
+        if (isEquals) {
+            calculate();
+        }
+    });
 });
+
+// Initialize the display
+updateDisplay();
+

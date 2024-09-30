@@ -1,1 +1,1 @@
-In this I Build a Countdown timer using HTML,CSS,JavaScript that counts down to specific date and time and also dsplaying the remaining time
+In this I design a Fundamental Calculator using HTML,CSS,JavaScript involves user engaging interface.
